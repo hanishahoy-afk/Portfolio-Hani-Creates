@@ -1,0 +1,453 @@
+<?php
+session_start();
+$currentUser = $_SESSION['user'] ?? null;
+?>
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio - Hani Creates (PHP VIP Edition)</title>
+  <meta name="description" content="Portfolio of Hani Creates - High-CTR YouTube Thumbnails, Commercial Posters, Modern Flyers, Islamic Poster Design, Creative Logos & Photo Retouching.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#E11D48',
+              redHover: '#BE123C',
+              dark: '#09090C',
+              card: '#131219',
+              border: 'rgba(255, 255, 255, 0.08)'
+            }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            arabic: ['"Noto Sans Arabic"', 'sans-serif'],
+            chinese: ['"Noto Sans SC"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#09090C] text-slate-100 min-h-screen relative selection:bg-rose-600 selection:text-white">
+
+  <!-- Ambient Cosmic Particles 60FPS Canvas -->
+  <canvas id="ambientCanvas"></canvas>
+
+  <!-- Atmospheric Ambient Studio Glows -->
+  <div class="hero-glow"></div>
+  <div class="hero-glow-alt"></div>
+  <div class="hero-glow-bottom"></div>
+
+  <!-- High-Conversion VIP Scarcity Ticker Ribbon -->
+  <div id="scarcityBar" class="scarcity-bar py-2 px-3 text-center text-xs font-bold text-slate-200 flex items-center justify-center gap-2 relative z-30">
+    <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0"></span>
+    <span id="scarcityText">🔥 HIGH DEMAND: Only 2 client slots open this week • 24h Express Turnaround Guarantee!</span>
+  </div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 bg-[#09090C]/90 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+    <div class="site-container h-20 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Profile Avatar -->
+      <a href="#" class="flex items-center gap-3 group shrink-0">
+        <div class="w-11 h-11 rounded-xl overflow-hidden border-2 border-rose-500/60 shadow-[0_0_15px_rgba(225,29,72,0.35)] group-hover:scale-105 transition-all shrink-0">
+          <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover">
+        </div>
+        <div>
+          <span class="text-xl font-black tracking-tight text-white designer-name block leading-tight">Hani Creates</span>
+          <span class="text-xs text-rose-400 font-bold tracking-wider uppercase flex items-center gap-1">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-rose-400"></i> Graphic & Thumbnail Pro
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-bold text-slate-300">
+        <a href="#portfolio" id="navPortfolio" class="hover:text-rose-400 transition-colors">Portfolio</a>
+        <a href="#testimonials" id="navReviews" class="hover:text-rose-400 transition-colors">Reviews</a>
+        <a href="#faq" id="navFaq" class="hover:text-rose-400 transition-colors">FAQ</a>
+        <a href="#order" id="navOrderPortal" class="hover:text-rose-400 transition-colors">Order Portal</a>
+      </nav>
+
+      <!-- Right Controls: 6-Language Dropdown, User Profile & WhatsApp CTA -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        
+        <!-- Desktop 6-Language Selector Dropdown -->
+        <div class="relative hidden sm:block" id="langDropdownWrapper">
+          <button id="langDropdownToggle" type="button" class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.12] text-xs font-bold text-white transition-all shadow-sm">
+            <span id="currentLangFlag">🇬🇧</span>
+            <span id="currentLangLabel">English</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          </button>
+          
+          <div id="langDropdownMenu" class="hidden absolute top-full mt-2 end-0 w-44 rounded-2xl bg-[#14131A] border border-white/[0.12] shadow-2xl p-1.5 z-50 flex flex-col gap-1 backdrop-blur-xl">
+            <button class="lang-switch-btn w-full text-start px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all text-slate-300 hover:text-white hover:bg-white/[0.08]" data-lang="en"><span>🇬🇧</span> <span>English</span></button>
+            <button class="lang-switch-btn w-full text-start px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all text-slate-300 hover:text-white hover:bg-white/[0.08]" data-lang="ur"><span>🇵🇰</span> <span>اردو</span></button>
+            <button class="lang-switch-btn w-full text-start px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all text-slate-300 hover:text-white hover:bg-white/[0.08]" data-lang="ar"><span>🇸🇦</span> <span>العربية</span></button>
+            <button class="lang-switch-btn w-full text-start px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all text-slate-300 hover:text-white hover:bg-white/[0.08]" data-lang="tr"><span>🇹🇷</span> <span>Türkçe</span></button>
+            <button class="lang-switch-btn w-full text-start px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all text-slate-300 hover:text-white hover:bg-white/[0.08]" data-lang="zh"><span>🇨🇳</span> <span>中文</span></button>
+            <button class="lang-switch-btn w-full text-start px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all text-slate-300 hover:text-white hover:bg-white/[0.08]" data-lang="fa"><span>🇮🇷</span> <span>فارسی</span></button>
+          </div>
+        </div>
+
+        <!-- PHP Authenticated User Badge -->
+        <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs font-bold text-emerald-400">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          <span><?= htmlspecialchars($currentUser['name'] ?? 'VIP Client') ?></span>
+          <a href="backend/auth.php?action=logout" class="text-slate-400 hover:text-rose-400 ml-1.5 pl-1.5 border-l border-white/[0.15] transition-colors" title="Log Out">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+
+        <a 
+          id="navWhatsAppBtn"
+          href="#" 
+          target="_blank"
+          class="hidden sm:inline-flex btn-primary px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold items-center justify-center gap-2 shrink-0"
+        >
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span id="navWhatsAppText">WhatsApp Me</span>
+        </a>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobileMenuBtn" class="md:hidden w-10 h-10 rounded-xl bg-white/[0.06] border border-white/[0.1] flex items-center justify-center text-slate-200 hover:text-rose-400 shrink-0" aria-label="Open navigation menu">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div id="mobileMenu" class="fixed inset-0 z-50 bg-[#0C0B12]/98 backdrop-blur-2xl hidden flex-col justify-between p-6 text-white shadow-2xl">
+    <div class="flex items-center justify-between pb-6 border-b border-white/[0.08]">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/60 shadow-lg">
+          <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover">
+        </div>
+        <div>
+          <span class="text-lg font-black text-white designer-name">Hani Creates</span>
+          <span class="text-xs text-rose-400 font-bold block">Graphic & Thumbnail Pro</span>
+        </div>
+      </div>
+      <button id="closeMobileMenuBtn" class="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/[0.1] flex items-center justify-center text-slate-300 hover:text-white" aria-label="Close menu">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <div class="flex items-center justify-between bg-emerald-500/10 border border-emerald-500/25 px-4 py-2.5 rounded-xl text-xs font-bold text-emerald-400">
+      <div class="flex items-center gap-2">
+        <i data-lucide="shield-check" class="w-4 h-4"></i>
+        <span><?= htmlspecialchars($currentUser['name'] ?? 'VIP Client') ?></span>
+      </div>
+      <a href="backend/auth.php?action=logout" class="text-xs font-bold text-rose-400 hover:text-rose-300 flex items-center gap-1">
+        <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout
+      </a>
+    </div>
+
+    <!-- Mobile 6-Language Grid Selector -->
+    <div>
+      <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Select Language / زبان منتخب کریں</div>
+      <div class="grid grid-cols-3 gap-2 bg-white/[0.04] border border-white/[0.08] p-2.5 rounded-2xl">
+        <button class="lang-switch-btn py-2 px-2 rounded-xl text-xs font-bold text-center border border-white/[0.06] hover:bg-white/[0.08] text-slate-200" data-lang="en">🇬🇧 English</button>
+        <button class="lang-switch-btn py-2 px-2 rounded-xl text-xs font-bold text-center border border-white/[0.06] hover:bg-white/[0.08] text-slate-200" data-lang="ur">🇵🇰 اردو</button>
+        <button class="lang-switch-btn py-2 px-2 rounded-xl text-xs font-bold text-center border border-white/[0.06] hover:bg-white/[0.08] text-slate-200" data-lang="ar">🇸🇦 العربية</button>
+        <button class="lang-switch-btn py-2 px-2 rounded-xl text-xs font-bold text-center border border-white/[0.06] hover:bg-white/[0.08] text-slate-200" data-lang="tr">🇹🇷 Türkçe</button>
+        <button class="lang-switch-btn py-2 px-2 rounded-xl text-xs font-bold text-center border border-white/[0.06] hover:bg-white/[0.08] text-slate-200" data-lang="zh">🇨🇳 中文</button>
+        <button class="lang-switch-btn py-2 px-2 rounded-xl text-xs font-bold text-center border border-white/[0.06] hover:bg-white/[0.08] text-slate-200" data-lang="fa">🇮🇷 فارسی</button>
+      </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="flex flex-col gap-5 text-lg font-extrabold text-slate-200">
+      <a href="#portfolio" class="mobile-nav-link hover:text-rose-400 flex items-center gap-2.5"><i data-lucide="grid" class="w-5 h-5 text-rose-400"></i> <span id="mNavPortfolio">Portfolio Work</span></a>
+      <a href="#testimonials" class="mobile-nav-link hover:text-rose-400 flex items-center gap-2.5"><i data-lucide="star" class="w-5 h-5 text-amber-400"></i> <span id="mNavReviews">Client Reviews</span></a>
+      <a href="#faq" class="mobile-nav-link hover:text-rose-400 flex items-center gap-2.5"><i data-lucide="help-circle" class="w-5 h-5 text-blue-400"></i> <span id="mNavFaq">Frequently Asked Questions</span></a>
+      <a href="#order" class="mobile-nav-link hover:text-rose-400 flex items-center gap-2.5"><i data-lucide="shopping-cart" class="w-5 h-5 text-emerald-400"></i> <span id="mNavOrderPortal">Client Order Portal</span></a>
+    </div>
+
+    <div>
+      <a id="mNavWhatsAppBtn" href="#" target="_blank" class="mobile-nav-link btn-primary w-full py-4 rounded-xl text-center font-bold flex items-center justify-center gap-2 mb-3 shadow-[0_4px_20px_rgba(225,29,72,0.4)]">
+        <i data-lucide="message-circle" class="w-5 h-5"></i> <span id="mNavWhatsAppText">WhatsApp Me</span>
+      </a>
+      <div class="text-center text-xs text-slate-400 font-medium">⚡ 24-Hour Express Turnaround • 100% Satisfaction</div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="relative pt-8 pb-14 md:pt-14 md:pb-20 overflow-hidden">
+      <div class="site-container">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          <div class="lg:col-span-7 text-center lg:text-left rtl:lg:text-right">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] border border-white/[0.12] text-xs sm:text-sm font-bold text-slate-300 mb-5 shadow-sm">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+              <span id="heroBadgeText">Available for Custom Projects & Retainers</span>
+            </div>
+            <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.25] mb-5">
+              <span id="heroTitlePrefix">Visuals That Hook Viewers & Elevate Your</span> 
+              <span id="heroTitleHighlight" class="headline-mark text-rose-500">Brand Identity</span>
+              <span id="heroTitleSuffix"></span>
+            </h1>
+            <p id="heroTagline" class="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed mb-7 font-normal mx-auto lg:mx-0">
+              I help YouTubers, business owners, and creators explode their views and brand value with psychology-backed Thumbnails, Posters, Flyers, Islamic Art, Logos & Photo Retouching.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start rtl:lg:justify-start gap-3 sm:gap-4 mb-7">
+              <a href="#portfolio" class="btn-primary w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(225,29,72,0.35)]">
+                <i data-lucide="grid" class="w-5 h-5"></i>
+                <span id="heroBtnPortfolioText">Explore My Work</span>
+              </a>
+              <a id="heroWhatsAppBtn" href="#" target="_blank" class="btn-secondary w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2.5">
+                <i data-lucide="message-circle" class="w-5 h-5 text-emerald-400"></i>
+                <span id="heroBtnWhatsAppText">Chat on WhatsApp</span>
+              </a>
+              <a href="#order" class="btn-secondary w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-sm sm:text-base text-slate-200 hover:text-white flex items-center justify-center gap-2">
+                <i data-lucide="shopping-cart" class="w-4 h-4 text-rose-400"></i>
+                <span id="heroBtnOrderText">Place an Order</span>
+              </a>
+            </div>
+            <div class="flex items-center justify-center lg:justify-start rtl:lg:justify-start gap-3 text-xs text-slate-400 font-semibold">
+              <div class="flex items-center text-amber-400">
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              </div>
+              <span class="text-white font-bold">4.9 / 5.0 Rating</span>
+              <span class="text-slate-600">•</span>
+              <span id="heroVerifiedBadge">Hani Creates • Verified Designer</span>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 flex justify-center">
+            <div class="relative max-w-xs sm:max-w-sm w-full">
+              <div class="profile-card-light rounded-3xl p-4 sm:p-5 relative overflow-hidden text-center bg-[#131219] border border-white/[0.12] shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+                <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-[#0A0A0E] border border-white/[0.08]">
+                  <img src="images/profile.jpg" alt="Hani Creates Designer" class="designer-profile-img w-full h-full object-cover">
+                  <div class="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 bg-[#0C0B12]/90 backdrop-blur-md border border-white/[0.15] px-3.5 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-2 shadow-lg">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Hani Creates (Online)</span>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <h3 class="text-xl font-black text-white designer-name">Hani Creates</h3>
+                  <p class="text-xs text-rose-400 font-bold mb-3 flex items-center justify-center gap-1">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-rose-400"></i> Thumbnails • Posters • Flyers • Islamic • Logos • Retouching
+                  </p>
+                  <div class="flex items-center justify-center gap-3 text-xs text-slate-400 border-t border-white/[0.08] pt-3 font-semibold">
+                    <span>⚡ 24h Delivery</span><span>•</span><span>📂 Source Files</span><span>•</span><span>🔄 Revisions</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="statsGrid" class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-full mt-12"></div>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO SHOWCASE GALLERY -->
+    <section id="portfolio" class="py-16 sm:py-20 border-t border-white/[0.08]">
+      <div class="site-container">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-10">
+          <div>
+            <div class="eyebrow mb-2"><span>Selected work</span></div>
+            <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">Designs That Stand Out</h2>
+          </div>
+          <p class="text-slate-400 text-sm md:text-base max-w-md font-medium">Click on any design below to view full resolution preview, details, and order a custom design directly.</p>
+        </div>
+        <div id="categoriesContainer" class="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-10"></div>
+        <div id="projectsGallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
+      </div>
+    </section>
+
+    <!-- CLIENT REVIEWS -->
+    <section id="testimonials" class="py-16 sm:py-20 bg-[#0E0D14] border-y border-white/[0.08]">
+      <div class="site-container">
+        <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div class="eyebrow mb-3 justify-center"><span id="reviewsTag">Testimonials</span></div>
+          <h2 id="reviewsTitle" class="font-display text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">Trusted by Global Creators</h2>
+          <p id="reviewsSubtitle" class="text-slate-400 text-base">Real feedback from YouTubers, event producers, and business clients who worked with Hani.</p>
+        </div>
+        <div id="testimonialsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 max-w-full"></div>
+      </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="py-16 sm:py-20">
+      <div class="site-container max-w-4xl mx-auto">
+        <div class="text-center mb-12 sm:mb-16">
+          <div class="eyebrow mb-3 justify-center"><span id="faqTag">Questions</span></div>
+          <h2 id="faqTitle" class="font-display text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mb-4">Frequently Asked Questions</h2>
+          <p id="faqSubtitle" class="text-slate-400 text-base">Everything you need to know about files, revisions, turnaround times, and payment.</p>
+        </div>
+        <div id="faqsList" class="space-y-4"></div>
+      </div>
+    </section>
+
+    <!-- CLIENT ORDER PORTAL -->
+    <section id="order" class="py-16 sm:py-20 bg-[#0C0B11] border-t border-white/[0.08] relative">
+      <div class="site-container">
+        <div class="glass-card rounded-3xl p-5 sm:p-8 md:p-12 border border-white/[0.1] bg-[#121118] relative overflow-hidden shadow-2xl">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+            <div class="lg:col-span-5 flex flex-col justify-between">
+              <div>
+                <div class="eyebrow mb-3"><span id="orderTag">Start a project</span></div>
+                <h2 id="orderTitle" class="font-display text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight mb-4 leading-tight">Place Your Design Order</h2>
+                <p id="orderSubtitle" class="text-slate-300 text-sm leading-relaxed mb-6 font-medium">Fill out your project specifications below. Submit to automatically deliver to Hani Creates on WhatsApp and Email directly!</p>
+                <div id="orderMandatoryBanner" class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs sm:text-sm font-semibold mb-6 flex items-center gap-2.5">
+                  <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
+                  <span>⚠️ Name, WhatsApp number, Email, and Project Details are strictly required.</span>
+                </div>
+                <div class="space-y-3.5">
+                  <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center shrink-0"><i data-lucide="phone" class="w-5 h-5"></i></div>
+                    <div><div class="text-xs text-slate-400 font-semibold">Direct WhatsApp</div><div id="designerPhone" class="text-sm font-bold text-white">0300 8661972</div></div>
+                  </div>
+                  <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center shrink-0"><i data-lucide="mail" class="w-5 h-5"></i></div>
+                    <div><div class="text-xs text-slate-400 font-semibold">Email Address</div><a id="designerEmail" href="mailto:hanishahoy@gmail.com" class="text-sm font-bold text-white hover:text-rose-400 transition-colors">hanishahoy@gmail.com</a></div>
+                  </div>
+                  <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0"><i data-lucide="clock" class="w-5 h-5"></i></div>
+                    <div><div class="text-xs text-slate-400 font-semibold">Turnaround Guarantee</div><div class="text-sm font-bold text-emerald-400">24 Hours Delivery</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="pt-6 text-xs text-slate-400 flex items-center gap-2 font-semibold">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                <span id="orderSecureNote">🔒 Fast direct communication. Usually replies within 15 minutes.</span>
+              </div>
+            </div>
+
+            <div class="lg:col-span-7 bg-[#16151F] p-5 sm:p-7 md:p-8 rounded-2xl border border-white/[0.08] shadow-lg">
+              <form id="orderForm" class="space-y-4" novalidate>
+                <div>
+                  <label id="clientNameLabel" for="clientName" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Your Full Name / Creator Alias *</label>
+                  <input type="text" id="clientName" value="<?= htmlspecialchars($currentUser['name'] ?? '') ?>" required placeholder="e.g. Alex Johnson" class="w-full rounded-xl px-4 py-3 text-white text-sm placeholder:text-slate-500 bg-[#1A1924] border border-white/[0.12]">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label id="clientPhoneLabel" for="clientPhone" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">WhatsApp / Contact Number *</label>
+                    <input type="text" id="clientPhone" value="<?= htmlspecialchars($currentUser['phone'] ?? '') ?>" required placeholder="e.g. 0300 1234567" class="w-full rounded-xl px-4 py-3 text-white text-sm placeholder:text-slate-500 bg-[#1A1924] border border-white/[0.12]">
+                  </div>
+                  <div>
+                    <label id="clientEmailLabel" for="clientEmail" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Email Address *</label>
+                    <input type="email" id="clientEmail" value="<?= htmlspecialchars($currentUser['email'] ?? '') ?>" required placeholder="client@example.com" class="w-full rounded-xl px-4 py-3 text-white text-sm placeholder:text-slate-500 bg-[#1A1924] border border-white/[0.12]">
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label id="clientServiceLabel" for="clientService" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Select Design Category *</label>
+                    <select id="clientService" class="w-full rounded-xl px-4 py-3 text-white text-sm bg-[#1A1924] border border-white/[0.12]"></select>
+                  </div>
+                  <div>
+                    <label id="clientQuantityLabel" for="clientQuantity" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Number of Designs / Quantity *</label>
+                    <select id="clientQuantity" class="w-full rounded-xl px-4 py-3 text-white text-sm bg-[#1A1924] border border-white/[0.12]"></select>
+                  </div>
+                </div>
+                <div id="customQuantityContainer" class="hidden transition-all">
+                  <label id="clientCustomQuantityLabel" for="clientCustomQuantity" class="block text-xs font-bold text-rose-400 uppercase tracking-wider mb-2">Specify Custom Number of Designs *</label>
+                  <input type="text" id="clientCustomQuantity" placeholder="e.g. 15 designs" class="w-full rounded-xl px-4 py-3 text-white text-sm placeholder:text-slate-500 bg-[#1A1924] border border-rose-500/40">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label id="clientUrgencyLabel" for="clientUrgency" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Delivery Timeline *</label>
+                    <select id="clientUrgency" class="w-full rounded-xl px-4 py-3 text-white text-sm bg-[#1A1924] border border-white/[0.12]"></select>
+                  </div>
+                  <div>
+                    <label id="clientBudgetLabel" for="clientBudget" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Estimated Budget</label>
+                    <input type="text" id="clientBudget" placeholder="e.g. $25 - $100 / PKR 5,000" class="w-full rounded-xl px-4 py-3 text-white text-sm placeholder:text-slate-500 bg-[#1A1924] border border-white/[0.12]">
+                  </div>
+                </div>
+                <div id="customDaysContainer" class="hidden transition-all">
+                  <label id="clientCustomDaysLabel" for="clientCustomDays" class="block text-xs font-bold text-rose-400 uppercase tracking-wider mb-2">Specify Custom Number of Days *</label>
+                  <input type="text" id="clientCustomDays" placeholder="e.g. 5 days / 5 دن" class="w-full rounded-xl px-4 py-3 text-white text-sm placeholder:text-slate-500 bg-[#1A1924] border border-rose-500/40">
+                </div>
+                <div>
+                  <label id="clientLinkLabel" for="clientLink" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Reference / Assets Link (Drive/YouTube/Dropbox)</label>
+                  <input type="text" id="clientLink" placeholder="https://drive.google.com/..." class="w-full rounded-xl px-4 py-3 text-white text-sm placeholder:text-slate-500 bg-[#1A1924] border border-white/[0.12]">
+                </div>
+                <div>
+                  <label id="clientDetailsLabel" for="clientDetails" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Project Description & Brief *</label>
+                  <textarea id="clientDetails" rows="3" required placeholder="Explain your concept, title ideas, desired colors..." class="w-full rounded-xl px-4 py-3 text-white text-sm placeholder:text-slate-500 resize-none bg-[#1A1924] border border-white/[0.12]"></textarea>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                  <button type="submit" id="orderSubmitBtn" class="btn-primary flex-1 py-4 rounded-xl font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(225,29,72,0.35)]">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                    <span id="orderBtnWhatsAppText">Send Order to WhatsApp & Email</span>
+                  </button>
+                  <button type="button" id="orderEmailBtn" class="btn-secondary sm:w-auto px-6 py-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                    <span id="orderBtnEmailText">Submit via Email Client</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="lightboxDialog" closedby="any" aria-labelledby="lightboxTitle"><div id="dialogContent"></div></dialog>
+
+  <a href="#" id="floatingWhatsApp" target="_blank" class="fixed bottom-6 left-6 rtl:left-auto rtl:right-6 z-40 w-14 h-14 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center shadow-xl shadow-emerald-500/40 hover:scale-105 transition-all" title="Chat on WhatsApp">
+    <i data-lucide="message-circle" class="w-7 h-7"></i>
+  </a>
+
+  <div id="toastNotification" class="bg-[#14131A] text-white border border-white/[0.15] px-5 py-3.5 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] flex items-center gap-3 text-sm font-semibold">
+    <i id="toastIcon" data-lucide="bell" class="w-5 h-5 text-rose-400 shrink-0"></i>
+    <span id="toastText">Action completed</span>
+  </div>
+
+  <footer class="bg-[#09090C] border-t border-white/[0.08] py-10">
+    <div class="site-container">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-white/[0.08]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0">
+            <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover">
+          </div>
+          <div>
+            <span class="text-lg font-black text-white designer-name">Hani Creates</span>
+            <span class="text-xs text-rose-400 font-bold block">Graphic & Thumbnail Designer</span>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-5 sm:gap-7 text-sm font-bold text-slate-300">
+          <a href="#portfolio" class="hover:text-rose-400 transition-colors">Portfolio</a>
+          <a href="#testimonials" class="hover:text-rose-400 transition-colors">Reviews</a>
+          <a href="#faq" class="hover:text-rose-400 transition-colors">FAQ</a>
+          <a href="#order" class="hover:text-rose-400 transition-colors">Order Portal</a>
+        </div>
+      </div>
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-400 text-center sm:text-left rtl:sm:text-right">
+        <p>© 2026 <span class="designer-name text-white font-bold">Hani Creates</span>. WhatsApp: 0300 8661972 • <span id="footerRights">All Rights Reserved.</span></p>
+        <p id="footerCrafted" class="flex items-center justify-center gap-1">Crafted with passion for creators & brands worldwide.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

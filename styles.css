@@ -1,0 +1,648 @@
+/* =====================================================================
+ * HANI CREATES — ULTRA LUXURY DARK STUDIO THEME
+ * Obsidian + Cosmic Carbon, Vibrant Electric Crimson & Warm Amber Gold.
+ * 2-3% container screen margins strictly maintained.
+ * Perfectly Aligned Buttons & Typography for 6 Languages (EN, UR, AR, TR, ZH, FA).
+ * ===================================================================== */
+
+:root {
+  --font-ui: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: 'Space Grotesk', 'Manrope', sans-serif;
+  --font-arabic: 'Noto Sans Arabic', sans-serif;
+  --font-chinese: 'Noto Sans SC', sans-serif;
+
+  --primary: #e11d48;
+  --primary-hover: #be123c;
+  --primary-glow: rgba(225, 29, 72, 0.35);
+
+  --gold: #f59e0b;
+  --gold-glow: rgba(245, 158, 11, 0.25);
+
+  --bg-page: #09090c;
+  --bg-surface: #100f15;
+  --bg-card: #131219;
+  --bg-card-hover: #181722;
+  --border-card: rgba(255, 255, 255, 0.08);
+  --border-card-hover: rgba(225, 29, 72, 0.45);
+
+  --text-main: #ffffff;
+  --text-body: #d4d4d8;
+  --text-muted: #71717a;
+
+  --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --shadow-hover: 0 12px 36px -8px rgba(225, 29, 72, 0.22), 0 8px 24px rgba(0, 0, 0, 0.7);
+  --shadow-print: 0 10px 30px -5px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-page);
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-body);
+  overflow-x: hidden;
+  font-family: var(--font-ui);
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Site Container with maximum 2-3% left/right margins across all viewports */
+.site-container {
+  width: min(100% - 2rem, 1440px);
+  max-width: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (min-width: 768px) {
+  .site-container {
+    width: min(100% - 3rem, 1440px);
+  }
+}
+
+/* =====================================================================
+ * MULTI-LANGUAGE TYPOGRAPHY (NO WORD COLLISION, MAXIMUM LEGIBILITY)
+ * ===================================================================== */
+
+/* LTR Base (English & Turkish) */
+html[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+
+html[dir="ltr"] h1,
+html[dir="ltr"] h2,
+html[dir="ltr"] h3,
+html[dir="ltr"] h4,
+html[dir="ltr"] .designer-name,
+html[dir="ltr"] .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* RTL Base (Urdu, Arabic, Farsi) */
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Urdu Typography (RTL) - Wide letter-spacing, generous line-heights */
+html[lang="ur"] {
+  font-family: var(--font-arabic), sans-serif;
+  line-height: 2.15;
+  letter-spacing: 0.01em;
+  word-spacing: 0.06em;
+}
+
+html[lang="ur"] h1,
+html[lang="ur"] h2,
+html[lang="ur"] h3 {
+  font-family: var(--font-arabic), sans-serif;
+  line-height: 1.6;
+  font-weight: 800;
+  margin-bottom: 0.85rem;
+}
+
+html[lang="ur"] p {
+  line-height: 2.2;
+  font-size: 1.05rem;
+  color: var(--text-body);
+}
+
+/* Arabic Typography (RTL) */
+html[lang="ar"] {
+  font-family: var(--font-arabic), sans-serif;
+  line-height: 2.1;
+  letter-spacing: 0.01em;
+  word-spacing: 0.04em;
+}
+
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] h4 {
+  font-family: var(--font-arabic), sans-serif;
+  line-height: 1.6;
+  font-weight: 800;
+  margin-bottom: 0.85rem;
+}
+
+html[lang="ar"] p {
+  line-height: 2.15;
+  font-size: 1.05rem;
+  color: var(--text-body);
+}
+
+/* Farsi / Persian Typography (RTL) */
+html[lang="fa"] {
+  font-family: var(--font-arabic), sans-serif;
+  line-height: 2.15;
+  letter-spacing: 0.01em;
+  word-spacing: 0.05em;
+}
+
+html[lang="fa"] h1,
+html[lang="fa"] h2,
+html[lang="fa"] h3 {
+  font-family: var(--font-arabic), sans-serif;
+  line-height: 1.6;
+  font-weight: 800;
+  margin-bottom: 0.85rem;
+}
+
+html[lang="fa"] p {
+  line-height: 2.2;
+  font-size: 1.05rem;
+  color: var(--text-body);
+}
+
+/* Chinese Typography (LTR) */
+html[lang="zh"] {
+  font-family: var(--font-chinese), sans-serif;
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+}
+
+html[lang="zh"] h1,
+html[lang="zh"] h2,
+html[lang="zh"] h3 {
+  font-family: var(--font-chinese), sans-serif;
+  line-height: 1.45;
+  font-weight: 800;
+}
+
+html[lang="zh"] p {
+  line-height: 1.95;
+  color: var(--text-body);
+}
+
+/* Turkish Typography (LTR) */
+html[lang="tr"] {
+  font-family: var(--font-ui);
+  line-height: 1.75;
+}
+
+/* Common text formatting */
+img, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+}
+
+button, a, input, select, textarea {
+  max-width: 100%;
+}
+
+h1, h2, h3, h4, p, span, a, button, label, option {
+  overflow-wrap: anywhere;
+}
+
+section[id] {
+  scroll-margin-top: 6rem;
+}
+
+/* =====================================================================
+ * AMBIENT DARK GLOWS (STUDIO ATMOSPHERE)
+ * ===================================================================== */
+.hero-glow {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(225, 29, 72, 0.16) 0%, rgba(225, 29, 72, 0) 70%);
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-glow-alt {
+  position: absolute;
+  top: 35%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  max-width: 100vw;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0) 70%);
+  filter: blur(110px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-glow-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(225, 29, 72, 0.1) 0%, rgba(225, 29, 72, 0) 70%);
+  filter: blur(120px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Glowing Headline Accent */
+.headline-mark {
+  position: relative;
+  display: inline-block;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ffffff 30%, #f43f5e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.headline-mark::after {
+  content: "";
+  position: absolute;
+  left: -0.05em;
+  right: -0.05em;
+  bottom: 0.04em;
+  height: 0.28em;
+  background: rgba(225, 29, 72, 0.28);
+  border-radius: 3px;
+  z-index: -1;
+  filter: blur(2px);
+}
+
+/* Eyebrow rule */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f43f5e;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 1.5rem;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(225, 29, 72, 0.6);
+  flex-shrink: 0;
+}
+
+[dir="rtl"] .eyebrow::before {
+  order: 2;
+}
+
+/* =====================================================================
+ * GLASS CARDS & STUDIO CONTAINERS (DARK THEME)
+ * ===================================================================== */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-subtle);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--border-card-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Portfolio Gallery Cards */
+#projectsGallery .glass-card {
+  background: #111016;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: var(--shadow-print);
+  border-radius: 1rem;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+#projectsGallery .glass-card:hover {
+  border-color: rgba(225, 29, 72, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px -10px rgba(225, 29, 72, 0.25), 0 8px 24px rgba(0, 0, 0, 0.8);
+}
+
+/* Profile Card */
+.profile-card-light {
+  background: #121118;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(225, 29, 72, 0.2);
+}
+
+.designer-profile-img {
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+/* =====================================================================
+ * BUTTONS (HOOK-DRIVEN, CONFIDENT & HIGH CONTRAST)
+ * ===================================================================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  color: #ffffff;
+  font-weight: 800;
+  text-align: center;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 18px rgba(225, 29, 72, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+  line-height: 1.25;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  transform: translateY(-1px) scale(1.015);
+  box-shadow: 0 8px 25px rgba(225, 29, 72, 0.55);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 999px !important;
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  line-height: 1.25;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(225, 29, 72, 0.5);
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+/* Filter Tab Buttons */
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-body);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px !important;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  line-height: 1.2;
+}
+
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.filter-btn.active {
+  background: #e11d48;
+  color: #ffffff;
+  border-color: #f43f5e;
+  box-shadow: 0 4px 16px rgba(225, 29, 72, 0.45);
+}
+
+/* Language Switcher Buttons */
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #a1a1aa;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.lang-btn.active {
+  background: #e11d48;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(225, 29, 72, 0.4);
+}
+
+/* =====================================================================
+ * FORMS, INPUTS & VALIDATION (SHAKE & GLOW)
+ * ===================================================================== */
+input, select, textarea {
+  background-color: #171620 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0.75rem !important;
+  min-height: 48px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #71717a !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #e11d48 !important;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.3) !important;
+}
+
+@keyframes inputShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+.input-error {
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.4) !important;
+  animation: inputShake 0.4s ease-in-out;
+}
+
+/* =====================================================================
+ * LIGHTBOX DIALOG (DEEP OBSIDIAN THEME)
+ * ===================================================================== */
+dialog#lightboxDialog {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1rem;
+  background: #111016;
+  color: #ffffff;
+  padding: 0;
+  max-width: 950px;
+  width: 95vw;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 35px rgba(225, 29, 72, 0.25);
+  margin: auto;
+  overflow: hidden;
+}
+
+dialog#lightboxDialog::backdrop {
+  background-color: rgba(5, 5, 8, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Toast alert notification */
+#toastNotification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  max-width: min(calc(100vw - 48px), 440px);
+  transform: translateY(140px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 9999;
+}
+
+[dir="rtl"] #toastNotification {
+  right: auto;
+  left: 24px;
+}
+
+#toastNotification.show {
+  transform: translateY(0);
+}
+
+#toastNotification.toast-error {
+  background: #200b12 !important;
+  border-color: rgba(244, 63, 94, 0.6) !important;
+  box-shadow: 0 10px 30px rgba(225, 29, 72, 0.4) !important;
+}
+
+#toastNotification.toast-error #toastIcon {
+  color: #f43f5e !important;
+}
+
+#toastNotification.toast-success {
+  background: #0d1e17 !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3) !important;
+}
+
+#toastNotification.toast-success #toastIcon {
+  color: #10b981 !important;
+}
+
+/* =====================================================================
+ * VIP CLIENT AUTH GATE (NON-BLOCKING MODAL)
+ * ===================================================================== */
+#authGateModal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(5, 5, 8, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+#authGateModal.active {
+  display: flex;
+}
+
+.auth-gate-card {
+  background: #111018;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.95), 0 0 45px rgba(225, 29, 72, 0.28);
+  border-radius: 1.5rem;
+  max-width: 480px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  animation: gateCardPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes gateCardPop {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-weight: 800;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #a1a1aa;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.auth-tab-btn.active {
+  color: #ffffff;
+  border-bottom-color: #e11d48;
+  background: rgba(225, 29, 72, 0.08);
+}
+
+/* =====================================================================
+ * AMBIENT COSMIC PARTICLES CANVAS
+ * ===================================================================== */
+#ambientCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.75;
+}
+
+/* =====================================================================
+ * CONVERSION & SCARCITY BAR (IRRESISTIBLE HOOK)
+ * ===================================================================== */
+.scarcity-bar {
+  background: linear-gradient(90deg, rgba(225, 29, 72, 0.16) 0%, rgba(245, 158, 11, 0.14) 50%, rgba(225, 29, 72, 0.16) 100%);
+  border-bottom: 1px solid rgba(225, 29, 72, 0.25);
+  box-shadow: 0 2px 15px rgba(225, 29, 72, 0.12);
+}
+
+/* Breathing Glow on Primary Buttons */
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 4px 18px rgba(225, 29, 72, 0.38); }
+  50% { box-shadow: 0 6px 28px rgba(225, 29, 72, 0.65), 0 0 16px rgba(245, 158, 11, 0.3); }
+}
+
+.btn-primary {
+  animation: ctaPulse 4s infinite ease-in-out;
+}
+
+/* Dark Mode Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #09090c;
+}
+::-webkit-scrollbar-thumb {
+  background: #272635;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e11d48;
+}
