@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initMobileMenu();
   applyLanguage(currentLang);
   initCounterAnimations();
+  syncWithLaravelApi();
 });
 
 // =====================================================================
@@ -83,10 +84,9 @@ function applyLanguage(lang) {
 
   // Designer profile images
   document.querySelectorAll(".designer-profile-img").forEach(img => {
-    img.src = d.profileImage || "images/profile.jpg";
-    img.onerror = () => {
-      img.src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80";
-    };
+    if (d.profileImage) {
+      img.src = d.profileImage;
+    }
   });
 
   // Designer name, phone, email
@@ -279,6 +279,37 @@ function getActiveProjects() {
   return PORTFOLIO_CONFIG.projects || [];
 }
 
+function syncWithLaravelApi() {
+  fetch("http://127.0.0.1:8000/api/projects", {
+    headers: { "Accept": "application/json" }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data && data.success && Array.isArray(data.data) && data.data.length > 0) {
+      console.log("⚡ Connected to Laravel 11 Backend API:", data.data.length, "projects synchronized.");
+      const laravelProjects = data.data.map(p => ({
+        id: p.id,
+        category: p.category,
+        categories: [p.category],
+        aspectRatio: p.aspect_ratio || "16/9",
+        image: p.image,
+        title: { en: p.title, ur: p.title },
+        views: p.views_metric,
+        ctr: p.ctr_metric,
+        metric: p.views_metric || p.ctr_metric,
+        client: p.client_name,
+        description: { en: p.description, ur: p.description },
+        tags: p.tags || []
+      }));
+      localStorage.setItem("hani_dynamic_projects", JSON.stringify(laravelProjects));
+      renderGallery(currentFilter, currentLang);
+    }
+  })
+  .catch(() => {
+    // Laravel API offline; fallback seamlessly to embedded data.js
+  });
+}
+
 function renderGallery(catId, lang) {
   const gallery = document.getElementById("projectsGallery");
   if (!gallery) return;
@@ -334,7 +365,7 @@ function renderGallery(catId, lang) {
     return `
       <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer flex flex-col bg-[#14131A] border border-white/[0.08] hover:border-rose-500/40 transition-all hover:shadow-[0_10px_30px_rgba(225,29,72,0.18)]" onclick="openLightbox(${p.id})">
         <div class="relative w-full ${aspectClass} bg-[#0A0A0E] flex items-center justify-center p-2 sm:p-2.5 overflow-hidden border-b border-white/[0.06]">
-          <img src="${p.image}" alt="${title}" loading="lazy" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80';">
+          <img src="${p.image}" alt="${title}" loading="lazy" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
           <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
             <div class="px-4 py-2 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg backdrop-blur-sm border border-rose-400/40">
               <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
@@ -426,7 +457,7 @@ window.openLightbox = function(id) {
   content.innerHTML = `
     <div class="relative bg-[#131219] text-white flex flex-col max-h-[92vh] border border-white/[0.12] rounded-3xl overflow-hidden shadow-2xl">
       <div class="relative w-full bg-[#08080C] flex items-center justify-center p-3 sm:p-5 overflow-hidden min-h-[260px] max-h-[58vh] border-b border-white/[0.08]">
-        <img src="${item.image}" alt="${title}" class="max-h-[52vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)]" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80';">
+        <img src="${item.image}" alt="${title}" class="max-h-[52vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
         
         <button 
           onclick="document.getElementById('lightboxDialog').close()" 
@@ -809,11 +840,28 @@ function initContactForm() {
       console.log("Background email notice:", err);
     });
 
-    // 2. Also dispatch to local PHP/MySQL backend if available
-    fetch("backend/order.php", {
+    // 2. Also dispatch to Laravel API backend if running
+    fetch("http://127.0.0.1:8000/api/orders", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(o)
+      headers: { 
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        client_name: o.name,
+        whatsapp_number: o.phone,
+        email: o.email,
+        service_category: o.service,
+        quantity: parseInt(o.quantity, 10) || 1,
+        turnaround_days: o.timeline,
+        budget: o.budget,
+        project_brief: o.details,
+        reference_links: o.link
+      })
+    }).then(res => res.json()).then(data => {
+      if (data && data.order_code) {
+        console.log("⚡ Order registered in Laravel Backend. Code:", data.order_code);
+      }
     }).catch(() => {});
 
     // 3. Prepare WhatsApp Message
