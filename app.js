@@ -266,13 +266,27 @@ window.filterProjects = function(catId) {
   renderGallery(catId, currentLang);
 };
 
+function getActiveProjects() {
+  const custom = localStorage.getItem("hani_dynamic_projects");
+  if (custom) {
+    try {
+      const parsed = JSON.parse(custom);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch(e) {}
+  }
+  return PORTFOLIO_CONFIG.projects || [];
+}
+
 function renderGallery(catId, lang) {
   const gallery = document.getElementById("projectsGallery");
   if (!gallery) return;
 
+  const allProjects = getActiveProjects();
   const items = catId === "all" 
-    ? PORTFOLIO_CONFIG.projects 
-    : PORTFOLIO_CONFIG.projects.filter(p => p.category === catId || (Array.isArray(p.categories) && p.categories.includes(catId)));
+    ? allProjects 
+    : allProjects.filter(p => p.category === catId || (Array.isArray(p.categories) && p.categories.includes(catId)));
 
   if (items.length === 0) {
     const emptyMessages = {
@@ -314,8 +328,8 @@ function renderGallery(catId, lang) {
       aspectClass = "aspect-[4/5]";
     }
 
-    const title = p.title[lang] || p.title.en;
-    const catName = p.categoryName[lang] || p.categoryName.en;
+    const title = typeof p.title === "object" ? (p.title[lang] || p.title.en) : p.title;
+    const catName = typeof p.categoryName === "object" ? (p.categoryName[lang] || p.categoryName.en) : (p.category || "Design");
 
     return `
       <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer flex flex-col bg-[#14131A] border border-white/[0.08] hover:border-rose-500/40 transition-all hover:shadow-[0_10px_30px_rgba(225,29,72,0.18)]" onclick="openLightbox(${p.id})">
@@ -368,16 +382,16 @@ function renderGallery(catId, lang) {
 // 5. LIGHTBOX MODAL
 // =====================================================================
 window.openLightbox = function(id) {
-  const item = PORTFOLIO_CONFIG.projects.find(p => p.id === id);
+  const item = getActiveProjects().find(p => p.id === id);
   if (!item) return;
 
   const dialog = document.getElementById("lightboxDialog");
   const d = PORTFOLIO_CONFIG.designer;
   const lang = currentLang;
 
-  const title = item.title[lang] || item.title.en;
-  const catName = item.categoryName[lang] || item.categoryName.en;
-  const desc = item.description[lang] || item.description.en;
+  const title = typeof item.title === "object" ? (item.title[lang] || item.title.en) : item.title;
+  const catName = typeof item.categoryName === "object" ? (item.categoryName[lang] || item.categoryName.en) : (item.category || "Design");
+  const desc = typeof item.description === "object" ? (item.description[lang] || item.description.en) : (item.description || "");
 
   const promptTexts = {
     ur: "کیا آپ ایسا شاندار ڈیزائن بنوانا چاہتے ہیں؟",

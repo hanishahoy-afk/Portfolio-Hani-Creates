@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio CMS & Project Manager - Hani Creates</title>
+  
+  <!-- Google Fonts: Space Grotesk & Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#E11D48',
+              redHover: '#BE123C',
+              dark: '#09090C',
+              card: '#131219',
+              border: 'rgba(255, 255, 255, 0.08)'
+            }
+          },
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans: ['"Manrope"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Manrope', sans-serif;
+      background-color: #09090C;
+      color: #F8FAFC;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .glass-card {
+      background: #131219;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #E11D48 0%, #BE123C 100%);
+      color: #FFFFFF;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(225, 29, 72, 0.4);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(225, 29, 72, 0.6);
+    }
+    .hero-glow {
+      position: fixed;
+      top: -150px;
+      right: 15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(225, 29, 72, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body class="min-h-screen relative selection:bg-rose-600 selection:text-white pb-20">
+
+  <div class="hero-glow"></div>
+
+  <!-- ================= 1. ADMIN AUTHENTICATION LOCK SCREEN ================= -->
+  <div id="loginScreen" class="fixed inset-0 z-50 bg-[#09090C] flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full p-8 rounded-3xl border border-white/[0.12] shadow-2xl relative text-center">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-500 shadow-[0_0_25px_rgba(225,29,72,0.25)]">
+        <i data-lucide="shield-lock" class="w-8 h-8"></i>
+      </div>
+      
+      <h1 class="text-2xl font-black text-white tracking-tight mb-1">Hani Creates Studio CMS</h1>
+      <p class="text-xs text-slate-400 mb-6">Restricted Access • Admin Only Management Portal</p>
+
+      <form id="adminLoginForm" class="space-y-4 text-left">
+        <div>
+          <label for="adminPassword" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Admin Security Key / PIN</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="adminPassword" 
+              required 
+              placeholder="Enter admin password (default: hani2026)"
+              class="w-full rounded-xl px-4 py-3.5 bg-[#1B1A24] border border-white/[0.15] text-white text-sm focus:outline-none focus:border-rose-500 transition-all placeholder:text-slate-500"
+            >
+            <button type="button" onclick="togglePassVisibility()" class="absolute right-3 top-3.5 text-slate-400 hover:text-white">
+              <i data-lucide="eye" id="passToggleIcon" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="loginError" class="hidden p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-bold flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+          <span id="loginErrorMsg">Incorrect password. Please try again.</span>
+        </div>
+
+        <button type="submit" class="btn-primary w-full py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+          <i data-lucide="unlock" class="w-4 h-4"></i>
+          <span>Unlock Admin Studio</span>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-6 border-t border-white/[0.08] text-xs text-slate-500 flex items-center justify-between">
+        <span>Default PIN: <strong class="text-rose-400">hani2026</strong></span>
+        <a href="index.html" class="text-slate-400 hover:text-white underline">Back to Portfolio</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 2. MAIN CMS DASHBOARD (SHOWN AFTER LOGIN) ================= -->
+  <div id="cmsDashboard" class="hidden relative z-10">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-[#09090C]/90 backdrop-blur-xl border-b border-white/[0.08]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
+            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-lg font-black text-white">Hani Creates <span class="text-rose-400 text-xs uppercase px-2 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20 ml-1">Admin Studio</span></span>
+            <span class="text-xs text-slate-400 block font-medium">Portfolio Content & Database Manager</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <a href="index.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.12] text-xs font-bold text-slate-200 hover:text-white flex items-center gap-2 transition-all">
+            <i data-lucide="external-link" class="w-3.5 h-3.5 text-rose-400"></i>
+            <span class="hidden sm:inline">View Live Site</span>
+          </a>
+          <button id="logoutBtn" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-bold text-rose-400 flex items-center gap-2 transition-all">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Log Out</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+
+      <!-- CMS Banner Notice -->
+      <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-950/40 via-purple-950/20 to-black border border-rose-500/20 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <div class="flex items-start sm:items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-black text-white">Direct Website Project Uploader</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Yahan se aap baghair kisi coding ke new thumbnail ya design upload kar sakte hain!</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="exportUpdatedDataJs()" class="btn-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span>Download Updated data.js</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Stats Row -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <div class="glass-card p-4 rounded-2xl border border-white/[0.08]">
+          <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">Total Projects</span>
+          <span id="statTotalProjects" class="text-2xl font-black text-white">0</span>
+        </div>
+        <div class="glass-card p-4 rounded-2xl border border-white/[0.08]">
+          <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">Thumbnails</span>
+          <span id="statThumbnails" class="text-2xl font-black text-rose-400">0</span>
+        </div>
+        <div class="glass-card p-4 rounded-2xl border border-white/[0.08]">
+          <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">Posters & Flyers</span>
+          <span id="statPosters" class="text-2xl font-black text-amber-400">0</span>
+        </div>
+        <div class="glass-card p-4 rounded-2xl border border-white/[0.08]">
+          <span class="text-xs text-slate-400 font-bold uppercase tracking-wider block mb-1">Logos & Islamic</span>
+          <span id="statLogos" class="text-2xl font-black text-emerald-400">0</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- ================= 3. UPLOAD NEW PROJECT FORM (LEFT 7 COLS) ================= -->
+        <div class="lg:col-span-7">
+          <div class="glass-card p-6 sm:p-7 rounded-3xl border border-white/[0.1] shadow-2xl">
+            
+            <div class="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-6">
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="plus-circle" class="w-5 h-5 text-rose-500"></i>
+                <h2 class="text-lg font-black text-white">Add New Project</h2>
+              </div>
+              <span class="text-xs text-slate-400 font-medium">* Required fields</span>
+            </div>
+
+            <form id="projectUploadForm" class="space-y-5">
+              
+              <!-- 1. Image Upload Box with Instant Preview -->
+              <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                  Project Image / Thumbnail (تصویر اپلوڈ کریں) *
+                </label>
+                
+                <div 
+                  id="dropZone" 
+                  class="border-2 border-dashed border-white/20 hover:border-rose-500/60 rounded-2xl p-6 text-center cursor-pointer transition-all bg-[#100F17]/60 group relative overflow-hidden"
+                  onclick="document.getElementById('projectImageInput').click()"
+                >
+                  <input 
+                    type="file" 
+                    id="projectImageInput" 
+                    accept="image/*" 
+                    class="hidden"
+                    onchange="handleImageSelection(event)"
+                  >
+                  
+                  <div id="uploadPrompt" class="space-y-2">
+                    <div class="w-12 h-12 mx-auto rounded-xl bg-white/[0.05] group-hover:bg-rose-500/10 flex items-center justify-center text-slate-400 group-hover:text-rose-400 transition-all">
+                      <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                    </div>
+                    <p class="text-sm font-bold text-white">Click to browse or Drag & Drop image here</p>
+                    <p class="text-xs text-slate-400">Supports JPG, PNG, WEBP (Max 10MB)</p>
+                  </div>
+
+                  <!-- Image Preview Box -->
+                  <div id="imagePreviewContainer" class="hidden relative">
+                    <img id="imagePreview" src="" alt="Preview" class="max-h-64 mx-auto rounded-xl object-contain shadow-lg border border-white/10">
+                    <button 
+                      type="button" 
+                      onclick="removeSelectedImage(event)" 
+                      class="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/80 hover:bg-rose-600 text-white flex items-center justify-center transition-all shadow-md"
+                      title="Remove image"
+                    >
+                      <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2. Project Title -->
+              <div>
+                <label for="projectTitle" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                  Project Title (عنوان) *
+                </label>
+                <input 
+                  type="text" 
+                  id="projectTitle" 
+                  required 
+                  placeholder="e.g. Fortnite Battle Royale - Viral High CTR Thumbnail"
+                  class="w-full rounded-xl px-4 py-3 bg-[#1A1924] border border-white/[0.12] text-white text-sm focus:outline-none focus:border-rose-500 transition-all placeholder:text-slate-500 font-medium"
+                >
+              </div>
+
+              <!-- 3. Category & Aspect Ratio Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="projectCategory" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                    Category (کیٹیگری) *
+                  </label>
+                  <select 
+                    id="projectCategory" 
+                    required 
+                    class="w-full rounded-xl px-4 py-3 bg-[#1A1924] border border-white/[0.12] text-white text-sm focus:outline-none focus:border-rose-500 transition-all font-medium"
+                    onchange="handleCategoryChange()"
+                  >
+                    <option value="thumbnail">YouTube Thumbnails (16:9)</option>
+                    <option value="poster">Poster Design (4:5 / 16:9)</option>
+                    <option value="flyer">Flyer Design (4:5)</option>
+                    <option value="islamic">Islamic Poster Design (4:5)</option>
+                    <option value="logo">Creative Logo Design (1:1)</option>
+                    <option value="retouching">Photo Retouching</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="projectAspectRatio" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                    Display Ratio (سائز) *
+                  </label>
+                  <select 
+                    id="projectAspectRatio" 
+                    class="w-full rounded-xl px-4 py-3 bg-[#1A1924] border border-white/[0.12] text-white text-sm focus:outline-none focus:border-rose-500 transition-all font-medium"
+                  >
+                    <option value="16/9">16:9 Landscape (Thumbnails & Banners)</option>
+                    <option value="4/5">4:5 Portrait (Posters & Flyers)</option>
+                    <option value="1/1">1:1 Square (Logos & Social)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- 4. Client Name & Metric Highlight Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="projectClient" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                    Client / Channel Name
+                  </label>
+                  <input 
+                    type="text" 
+                    id="projectClient" 
+                    placeholder="e.g. Press MF Gaming / Earn With Faisal"
+                    class="w-full rounded-xl px-4 py-3 bg-[#1A1924] border border-white/[0.12] text-white text-sm focus:outline-none focus:border-rose-500 transition-all placeholder:text-slate-500 font-medium"
+                  >
+                </div>
+
+                <div>
+                  <label for="projectMetric" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                    Metric / Highlight Badge
+                  </label>
+                  <input 
+                    type="text" 
+                    id="projectMetric" 
+                    placeholder="e.g. 🔥 18.5% CTR • 3.2M Views"
+                    class="w-full rounded-xl px-4 py-3 bg-[#1A1924] border border-white/[0.12] text-white text-sm focus:outline-none focus:border-rose-500 transition-all placeholder:text-slate-500 font-medium"
+                  >
+                </div>
+              </div>
+
+              <!-- 5. Description -->
+              <div>
+                <label for="projectDescription" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                  Project Description (تفصیل)
+                </label>
+                <textarea 
+                  id="projectDescription" 
+                  rows="3" 
+                  placeholder="e.g. High CTR viral thumbnail design crafted with neon 3D lighting, psychology-driven focal point, and vibrant color grading."
+                  class="w-full rounded-xl px-4 py-3 bg-[#1A1924] border border-white/[0.12] text-white text-sm focus:outline-none focus:border-rose-500 transition-all placeholder:text-slate-500 font-medium resize-none"
+                ></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="pt-2">
+                <button 
+                  type="submit" 
+                  id="submitProjectBtn"
+                  class="btn-primary w-full py-4 rounded-xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_4px_25px_rgba(225,29,72,0.4)]"
+                >
+                  <i data-lucide="check-circle" class="w-5 h-5"></i>
+                  <span>Publish Project to Portfolio (ویب سائٹ پر پبلش کریں)</span>
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+
+        <!-- ================= 4. LIVE PREVIEW & RECENT ITEMS (RIGHT 5 COLS) ================= -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Live Preview Card -->
+          <div class="glass-card p-5 rounded-3xl border border-white/[0.1]">
+            <div class="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-4">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="eye" class="w-4 h-4 text-rose-400"></i> Live Card Preview
+              </span>
+              <span class="text-[11px] font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full border border-rose-500/20">How it looks</span>
+            </div>
+
+            <!-- The Preview Card -->
+            <div id="cardPreviewBox" class="rounded-2xl overflow-hidden bg-[#14131A] border border-white/[0.1] shadow-xl">
+              <div id="cardPreviewAspect" class="relative w-full aspect-video bg-[#0A0A0E] flex items-center justify-center overflow-hidden border-b border-white/[0.08]">
+                <img id="cardPreviewImage" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="Preview" class="w-full h-full object-contain">
+              </div>
+              <div class="p-4">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span id="cardPreviewCategory" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+                    YouTube Thumbnail
+                  </span>
+                  <span id="cardPreviewMetric" class="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                    🔥 18.5% CTR • Viral Hit
+                  </span>
+                </div>
+                <h3 id="cardPreviewTitle" class="text-sm font-black text-white mb-1 line-clamp-1">
+                  Fortnite Battle Royale - Viral High CTR
+                </h3>
+                <div class="text-xs text-slate-400 font-semibold flex items-center gap-1.5">
+                  <i data-lucide="user" class="w-3.5 h-3.5 text-slate-500"></i>
+                  <span id="cardPreviewClient">Press MF Gaming</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Tip Card -->
+          <div class="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-xs text-slate-400 space-y-2">
+            <div class="flex items-center gap-2 text-white font-bold">
+              <i data-lucide="info" class="w-4 h-4 text-rose-400"></i>
+              <span>ضروری معلومات (How it works):</span>
+            </div>
+            <p>1. آپ جیسے ہی **Publish Project** دبائیں گے، یہ فوراً آپ کے پورٹ فولیو پر لائیو ایڈ ہو جائے گا۔</p>
+            <p>2. اگر آپ چاہتے ہیں کہ GitHub پر بھی سارا ڈیٹا ہمیشہ کے لیے مستقل محفوظ رہے، تو اوپر **Download Updated data.js** پر کلک کر کے اس فائل کو GitHub پر اپلوڈ کر دیں۔</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= 5. ALL MANAGED PROJECTS LIST ================= -->
+      <div class="mt-12">
+        <div class="glass-card p-6 sm:p-7 rounded-3xl border border-white/[0.1] shadow-2xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08] mb-6">
+            <div>
+              <h2 class="text-xl font-black text-white">All Projects in Database</h2>
+              <p class="text-xs text-slate-400 mt-0.5">تمام پراجیکٹس دیکھیں، ایڈٹ کریں یا ڈیلیٹ کریں۔</p>
+            </div>
+            <button onclick="resetToDefaults()" class="px-3.5 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.1] text-xs font-bold text-slate-300 hover:text-white transition-all">
+              Restore Default Samples
+            </button>
+          </div>
+
+          <!-- Projects Table / Grid -->
+          <div id="projectsListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-[#16151F] border border-white/[0.15] text-white px-5 py-4 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-bold pointer-events-none">
+    <div id="toastIcon" class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+      <i data-lucide="check" class="w-4 h-4"></i>
+    </div>
+    <span id="toastText">Action successful</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script>
+    // Security Passcode (Default: hani2026)
+    const ADMIN_PASS = "hani2026";
+    let selectedImageBase64 = "";
+
+    // 1. Check Authentication on Load
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      checkAuthStatus();
+      initLivePreviewListeners();
+    });
+
+    function checkAuthStatus() {
+      const isAuth = sessionStorage.getItem("hani_admin_auth");
+      if (isAuth === "true") {
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("cmsDashboard").classList.remove("hidden");
+        loadAllProjects();
+      } else {
+        document.getElementById("loginScreen").classList.remove("hidden");
+        document.getElementById("cmsDashboard").classList.add("hidden");
+      }
+    }
+
+    // 2. Handle Login
+    document.getElementById("adminLoginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const enteredPass = document.getElementById("adminPassword").value.trim();
+      const errEl = document.getElementById("loginError");
+
+      if (enteredPass === ADMIN_PASS) {
+        sessionStorage.setItem("hani_admin_auth", "true");
+        errEl.classList.add("hidden");
+        checkAuthStatus();
+        showToast("Welcome Hani! Admin CMS Unlocked.");
+      } else {
+        errEl.classList.remove("hidden");
+      }
+    });
+
+    function togglePassVisibility() {
+      const input = document.getElementById("adminPassword");
+      const icon = document.getElementById("passToggleIcon");
+      if (input.type === "password") {
+        input.type = "text";
+        icon.setAttribute("data-lucide", "eye-off");
+      } else {
+        input.type = "password";
+        icon.setAttribute("data-lucide", "eye");
+      }
+      lucide.createIcons();
+    }
+
+    // 3. Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      sessionStorage.removeItem("hani_admin_auth");
+      checkAuthStatus();
+      showToast("Logged out from Admin CMS.");
+    });
+
+    // 4. Handle Image File Selection (Converts to Base64 data URL)
+    function handleImageSelection(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        alert("Please upload a valid image file (JPG, PNG, WEBP).");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        selectedImageBase64 = e.target.result;
+        
+        // Show in Preview inside Upload Box
+        document.getElementById("imagePreview").src = selectedImageBase64;
+        document.getElementById("uploadPrompt").classList.add("hidden");
+        document.getElementById("imagePreviewContainer").classList.remove("hidden");
+        
+        // Update live card preview
+        document.getElementById("cardPreviewImage").src = selectedImageBase64;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeSelectedImage(e) {
+      if (e) e.stopPropagation();
+      selectedImageBase64 = "";
+      document.getElementById("projectImageInput").value = "";
+      document.getElementById("imagePreview").src = "";
+      document.getElementById("uploadPrompt").classList.remove("hidden");
+      document.getElementById("imagePreviewContainer").classList.add("hidden");
+      document.getElementById("cardPreviewImage").src = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80";
+    }
+
+    // 5. Category Selection Auto Ratio
+    function handleCategoryChange() {
+      const cat = document.getElementById("projectCategory").value;
+      const ratioSelect = document.getElementById("projectAspectRatio");
+      if (cat === "thumbnail") {
+        ratioSelect.value = "16/9";
+      } else if (cat === "poster" || cat === "flyer" || cat === "islamic") {
+        ratioSelect.value = "4/5";
+      } else if (cat === "logo") {
+        ratioSelect.value = "1/1";
+      }
+      updateCardPreview();
+    }
+
+    // 6. Live Card Preview Listeners
+    function initLivePreviewListeners() {
+      const titleInput = document.getElementById("projectTitle");
+      const clientInput = document.getElementById("projectClient");
+      const metricInput = document.getElementById("projectMetric");
+      const catSelect = document.getElementById("projectCategory");
+      const ratioSelect = document.getElementById("projectAspectRatio");
+
+      [titleInput, clientInput, metricInput, catSelect, ratioSelect].forEach(input => {
+        if (input) input.addEventListener("input", updateCardPreview);
+      });
+    }
+
+    function updateCardPreview() {
+      const title = document.getElementById("projectTitle").value || "Project Title Preview";
+      const client = document.getElementById("projectClient").value || "Client Name";
+      const metric = document.getElementById("projectMetric").value || "🔥 High CTR Design";
+      const catText = document.getElementById("projectCategory").options[document.getElementById("projectCategory").selectedIndex].text;
+      const ratio = document.getElementById("projectAspectRatio").value;
+
+      document.getElementById("cardPreviewTitle").textContent = title;
+      document.getElementById("cardPreviewClient").textContent = client;
+      document.getElementById("cardPreviewMetric").textContent = metric;
+      document.getElementById("cardPreviewCategory").textContent = catText.split(" (")[0];
+
+      const aspectBox = document.getElementById("cardPreviewAspect");
+      aspectBox.className = "relative w-full bg-[#0A0A0E] flex items-center justify-center overflow-hidden border-b border-white/[0.08] " + 
+        (ratio === "1/1" ? "aspect-square" : ratio === "4/5" ? "aspect-[4/5]" : "aspect-video");
+    }
+
+    // 7. Get and Load All Projects
+    function getStoredProjects() {
+      const custom = localStorage.getItem("hani_dynamic_projects");
+      if (custom) {
+        try {
+          return JSON.parse(custom);
+        } catch(e) {}
+      }
+      // Return defaults from data.js
+      return PORTFOLIO_CONFIG.projects || [];
+    }
+
+    function saveProjects(projects) {
+      localStorage.setItem("hani_dynamic_projects", JSON.stringify(projects));
+      loadAllProjects();
+    }
+
+    function loadAllProjects() {
+      const projects = getStoredProjects();
+      
+      // Update quick counters
+      document.getElementById("statTotalProjects").textContent = projects.length;
+      document.getElementById("statThumbnails").textContent = projects.filter(p => p.category === "thumbnail").length;
+      document.getElementById("statPosters").textContent = projects.filter(p => p.category === "poster" || p.category === "flyer").length;
+      document.getElementById("statLogos").textContent = projects.filter(p => p.category === "logo" || p.category === "islamic").length;
+
+      // Render cards in list
+      const container = document.getElementById("projectsListContainer");
+      if (!projects || projects.length === 0) {
+        container.innerHTML = `<div class="col-span-full py-10 text-center text-slate-500">No projects yet. Upload your first design!</div>`;
+        return;
+      }
+
+      container.innerHTML = projects.map((p, idx) => {
+        const title = typeof p.title === "object" ? (p.title.en || p.title.ur) : p.title;
+        const catName = typeof p.categoryName === "object" ? (p.categoryName.en || p.categoryName.ur) : (p.category || "Design");
+        const client = p.client || "Client Project";
+        const metric = p.metric || "";
+
+        return `
+          <div class="p-4 rounded-2xl bg-[#14131A] border border-white/[0.08] flex flex-col justify-between group hover:border-rose-500/40 transition-all">
+            <div class="relative w-full aspect-video rounded-xl bg-black/60 overflow-hidden mb-3 border border-white/[0.06]">
+              <img src="${p.image}" alt="${title}" class="w-full h-full object-contain" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80'">
+              <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/80 text-rose-400 border border-white/10 uppercase">
+                ${p.category}
+              </span>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <span class="text-xs font-semibold text-slate-400">${client}</span>
+                ${metric ? `<span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">${metric}</span>` : ''}
+              </div>
+              <h4 class="text-sm font-bold text-white mb-3 line-clamp-1">${title}</h4>
+            </div>
+
+            <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between">
+              <span class="text-[11px] text-slate-500 font-mono">ID: #${p.id}</span>
+              <button onclick="deleteProject(${p.id})" class="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold flex items-center gap-1 transition-colors">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      lucide.createIcons();
+    }
+
+    // 8. Handle Submit Form
+    document.getElementById("projectUploadForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      if (!selectedImageBase64) {
+        alert("Please select or drop an image for the project!");
+        return;
+      }
+
+      const title = document.getElementById("projectTitle").value.trim();
+      const category = document.getElementById("projectCategory").value;
+      const aspectRatio = document.getElementById("projectAspectRatio").value;
+      const client = document.getElementById("projectClient").value.trim() || "Client Project";
+      const metric = document.getElementById("projectMetric").value.trim() || "High Converting Design";
+      const desc = document.getElementById("projectDescription").value.trim() || "High quality visual design crafted with precision.";
+
+      const catDisplayNames = {
+        thumbnail: "YouTube Thumbnail",
+        poster: "Poster Design",
+        flyer: "Flyer Design",
+        islamic: "Islamic Poster Design",
+        logo: "Creative Logo Design",
+        retouching: "Photo Retouching"
+      };
+
+      const newProject = {
+        id: Date.now(),
+        category: category,
+        categories: [category],
+        aspectRatio: aspectRatio,
+        image: selectedImageBase64,
+        client: client,
+        metric: metric,
+        title: {
+          en: title,
+          ur: title,
+          ar: title,
+          tr: title,
+          zh: title,
+          fa: title
+        },
+        categoryName: {
+          en: catDisplayNames[category] || "Custom Design",
+          ur: catDisplayNames[category] || "کسٹم ڈیزائن",
+          ar: catDisplayNames[category] || "تصميم",
+          tr: catDisplayNames[category] || "Tasarım",
+          zh: catDisplayNames[category] || "设计",
+          fa: catDisplayNames[category] || "طراحی"
+        },
+        description: {
+          en: desc,
+          ur: desc,
+          ar: desc,
+          tr: desc,
+          zh: desc,
+          fa: desc
+        }
+      };
+
+      // Also attempt backend POST if PHP/MySQL server is running
+      try {
+        fetch("backend/api_projects.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newProject)
+        }).catch(() => {});
+      } catch(e) {}
+
+      // Add to beginning of projects
+      const existing = getStoredProjects();
+      const updated = [newProject, ...existing];
+      saveProjects(updated);
+
+      // Reset form
+      document.getElementById("projectUploadForm").reset();
+      removeSelectedImage();
+      showToast("🎉 New Project Published to Portfolio Successfully!");
+    });
+
+    // 9. Delete Project
+    window.deleteProject = function(id) {
+      if (!confirm("Are you sure you want to delete this project?")) return;
+      const existing = getStoredProjects();
+      const updated = existing.filter(p => p.id !== id);
+      saveProjects(updated);
+      showToast("Project removed.");
+    };
+
+    // 10. Reset to Defaults
+    window.resetToDefaults = function() {
+      if (!confirm("Reset to default sample projects from data.js?")) return;
+      localStorage.removeItem("hani_dynamic_projects");
+      loadAllProjects();
+      showToast("Reset to default projects.");
+    };
+
+    // 11. Export Updated data.js File
+    window.exportUpdatedDataJs = function() {
+      const projects = getStoredProjects();
+      
+      // Clone config
+      const exportConfig = JSON.parse(JSON.stringify(PORTFOLIO_CONFIG));
+      exportConfig.projects = projects;
+
+      const fileContent = `/**
+ * =====================================================================
+ * HANI CREATES - PORTFOLIO CONFIGURATION & MULTI-LANGUAGE DATA
+ * Auto-generated & exported by Hani Creates Studio CMS
+ * =====================================================================
+ */
+
+const PORTFOLIO_CONFIG = ` + JSON.stringify(exportConfig, null, 2) + `;\n`;
+
+      const blob = new Blob([fileContent], { type: "text/javascript" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "data.js";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast("📥 Updated data.js downloaded! You can upload it to GitHub.");
+    };
+
+    // Toast helper
+    function showToast(msg) {
+      const toast = document.getElementById("toastNotification");
+      const text = document.getElementById("toastText");
+      if (!toast || !text) return;
+
+      text.textContent = msg;
+      toast.classList.remove("opacity-0", "translate-y-24");
+      toast.classList.add("opacity-100", "translate-y-0");
+
+      setTimeout(() => {
+        toast.classList.remove("opacity-100", "translate-y-0");
+        toast.classList.add("opacity-0", "translate-y-24");
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
