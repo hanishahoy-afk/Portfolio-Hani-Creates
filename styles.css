@@ -546,60 +546,6 @@ dialog#lightboxDialog::backdrop {
 }
 
 /* =====================================================================
- * VIP CLIENT AUTH GATE (NON-BLOCKING MODAL)
- * ===================================================================== */
-#authGateModal {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  background: rgba(5, 5, 8, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-#authGateModal.active {
-  display: flex;
-}
-
-.auth-gate-card {
-  background: #111018;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 25px 70px -10px rgba(0, 0, 0, 0.95), 0 0 45px rgba(225, 29, 72, 0.28);
-  border-radius: 1.5rem;
-  max-width: 480px;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  animation: gateCardPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes gateCardPop {
-  0% { transform: scale(0.92); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.auth-tab-btn {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  font-weight: 800;
-  font-size: 0.85rem;
-  text-align: center;
-  color: #a1a1aa;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s ease;
-}
-
-.auth-tab-btn.active {
-  color: #ffffff;
-  border-bottom-color: #e11d48;
-  background: rgba(225, 29, 72, 0.08);
-}
-
-/* =====================================================================
  * AMBIENT COSMIC PARTICLES CANVAS
  * ===================================================================== */
 #ambientCanvas {
@@ -611,15 +557,6 @@ dialog#lightboxDialog::backdrop {
   pointer-events: none;
   z-index: 0;
   opacity: 0.75;
-}
-
-/* =====================================================================
- * CONVERSION & SCARCITY BAR (IRRESISTIBLE HOOK)
- * ===================================================================== */
-.scarcity-bar {
-  background: linear-gradient(90deg, rgba(225, 29, 72, 0.16) 0%, rgba(245, 158, 11, 0.14) 50%, rgba(225, 29, 72, 0.16) 100%);
-  border-bottom: 1px solid rgba(225, 29, 72, 0.25);
-  box-shadow: 0 2px 15px rgba(225, 29, 72, 0.12);
 }
 
 /* Breathing Glow on Primary Buttons */

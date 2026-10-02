@@ -56,11 +56,7 @@ $currentUser = $_SESSION['user'] ?? null;
   <div class="hero-glow-alt"></div>
   <div class="hero-glow-bottom"></div>
 
-  <!-- High-Conversion VIP Scarcity Ticker Ribbon -->
-  <div id="scarcityBar" class="scarcity-bar py-2 px-3 text-center text-xs font-bold text-slate-200 flex items-center justify-center gap-2 relative z-30">
-    <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0"></span>
-    <span id="scarcityText">🔥 HIGH DEMAND: Only 2 client slots open this week • 24h Express Turnaround Guarantee!</span>
-  </div>
+
 
   <!-- ================= NAVBAR ================= -->
   <header class="sticky top-0 z-40 bg-[#09090C]/90 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
@@ -69,7 +65,7 @@ $currentUser = $_SESSION['user'] ?? null;
       <!-- Brand Logo & Profile Avatar -->
       <a href="#" class="flex items-center gap-3 group shrink-0">
         <div class="w-11 h-11 rounded-xl overflow-hidden border-2 border-rose-500/60 shadow-[0_0_15px_rgba(225,29,72,0.35)] group-hover:scale-105 transition-all shrink-0">
-          <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover">
+          <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';">
         </div>
         <div>
           <span class="text-xl font-black tracking-tight text-white designer-name block leading-tight">Hani Creates</span>
@@ -141,7 +137,7 @@ $currentUser = $_SESSION['user'] ?? null;
     <div class="flex items-center justify-between pb-6 border-b border-white/[0.08]">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/60 shadow-lg">
-          <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover">
+          <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';">
         </div>
         <div>
           <span class="text-lg font-black text-white designer-name">Hani Creates</span>
@@ -242,7 +238,7 @@ $currentUser = $_SESSION['user'] ?? null;
             <div class="relative max-w-xs sm:max-w-sm w-full">
               <div class="profile-card-light rounded-3xl p-4 sm:p-5 relative overflow-hidden text-center bg-[#131219] border border-white/[0.12] shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
                 <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-4 bg-[#0A0A0E] border border-white/[0.08]">
-                  <img src="images/profile.jpg" alt="Hani Creates Designer" class="designer-profile-img w-full h-full object-cover">
+                  <img src="images/profile.jpg" alt="Hani Creates Designer" class="designer-profile-img w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';">
                   <div class="absolute bottom-3 left-3 rtl:left-auto rtl:right-3 bg-[#0C0B12]/90 backdrop-blur-md border border-white/[0.15] px-3.5 py-1.5 rounded-full text-xs font-bold text-white flex items-center gap-2 shadow-lg">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span>Hani Creates (Online)</span>
@@ -426,7 +422,7 @@ $currentUser = $_SESSION['user'] ?? null;
       <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-white/[0.08]">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/50 shrink-0">
-            <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover">
+            <img src="images/profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';">
           </div>
           <div>
             <span class="text-lg font-black text-white designer-name">Hani Creates</span>

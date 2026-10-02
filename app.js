@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initAmbientCanvas();
   initLanguageSwitcher();
-  initAuthGate();
   initCustomToggles();
   initContactForm();
   initDialogFallback();
@@ -27,255 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // =====================================================================
-// 1. VIP CLIENT AUTH PORTAL (NON-BLOCKING MODAL)
-// =====================================================================
-function initAuthGate() {
-  const modal = document.getElementById("authGateModal");
-  if (!modal) return;
-
-  const openAuthBtn = document.getElementById("openAuthModalBtn");
-  const closeAuthBtn = document.getElementById("closeAuthModalBtn");
-  const tabLogin = document.getElementById("authTabLogin");
-  const tabSignup = document.getElementById("authTabSignup");
-  const formLogin = document.getElementById("authLoginForm");
-  const formSignup = document.getElementById("authSignupForm");
-  const guestBtn = document.getElementById("authGuestBtn");
-  const navLogoutBtn = document.getElementById("navLogoutBtn");
-  const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
-
-  // Open modal on demand
-  if (openAuthBtn) {
-    openAuthBtn.addEventListener("click", () => {
-      modal.classList.add("active");
-    });
-  }
-
-  // Close modal handlers
-  if (closeAuthBtn) {
-    closeAuthBtn.addEventListener("click", () => {
-      modal.classList.remove("active");
-    });
-  }
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      modal.classList.remove("active");
-    }
-  });
-
-  // Tab switching
-  if (tabLogin && tabSignup) {
-    tabLogin.addEventListener("click", () => {
-      tabLogin.classList.add("active");
-      tabSignup.classList.remove("active");
-      formLogin.classList.remove("hidden");
-      formSignup.classList.add("hidden");
-      clearAuthAlert();
-    });
-
-    tabSignup.addEventListener("click", () => {
-      tabSignup.classList.add("active");
-      tabLogin.classList.remove("active");
-      formSignup.classList.remove("hidden");
-      formLogin.classList.add("hidden");
-      clearAuthAlert();
-    });
-  }
-
-  // Check existing session (Silent - NEVER blocks the site!)
-  const storedUser = localStorage.getItem("hani_auth_user") || sessionStorage.getItem("hani_auth_user");
-  if (storedUser) {
-    try {
-      const user = JSON.parse(storedUser);
-      applyUserSession(user, false);
-    } catch (e) {
-      clearUserSession();
-    }
-  } else {
-    clearUserSession();
-  }
-
-  // Handle Login submission
-  if (formLogin) {
-    formLogin.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const identifier = document.getElementById("authLoginEmail").value.trim();
-      const password = document.getElementById("authLoginPassword").value.trim();
-      const remember = document.getElementById("authRememberMe").checked;
-
-      if (!identifier || !password) {
-        showAuthAlert("Please provide both email/phone and password.", true);
-        return;
-      }
-
-      const user = {
-        name: identifier.includes("@") ? identifier.split("@")[0].toUpperCase() : "VIP Client",
-        email: identifier.includes("@") ? identifier : "client@hanicreates.com",
-        phone: identifier.includes("@") ? "0300 8661972" : identifier,
-        role: "VIP Member",
-        token: "VIP-" + Math.random().toString(36).substring(2, 9)
-      };
-
-      fetch("backend/auth.php?action=login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier, password })
-      }).then(r => r.json()).then(data => {
-        if (data.user) user.name = data.user.name;
-      }).catch(() => {});
-
-      if (remember) {
-        localStorage.setItem("hani_auth_user", JSON.stringify(user));
-      } else {
-        sessionStorage.setItem("hani_auth_user", JSON.stringify(user));
-      }
-
-      const t = PORTFOLIO_CONFIG.translations[currentLang];
-      showAuthAlert(t.auth?.loginSuccess || "Welcome back! Login successful.", false);
-
-      setTimeout(() => {
-        modal.classList.remove("active");
-        applyUserSession(user, true);
-      }, 500);
-    });
-  }
-
-  // Handle Sign Up submission
-  if (formSignup) {
-    formSignup.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("authSignupName").value.trim();
-      const phone = document.getElementById("authSignupPhone").value.trim();
-      const email = document.getElementById("authSignupEmail").value.trim();
-      const password = document.getElementById("authSignupPassword").value.trim();
-
-      if (!name || !phone || !email || !password) {
-        showAuthAlert("All fields are strictly required for VIP registration.", true);
-        return;
-      }
-
-      const user = {
-        name,
-        email,
-        phone,
-        role: "VIP Member",
-        token: "VIP-" + Math.random().toString(36).substring(2, 9)
-      };
-
-      fetch("backend/auth.php?action=register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, password })
-      }).catch(() => {});
-
-      localStorage.setItem("hani_auth_user", JSON.stringify(user));
-
-      const t = PORTFOLIO_CONFIG.translations[currentLang];
-      showAuthAlert(t.auth?.signupSuccess || "Account created successfully! Welcome to Hani Creates.", false);
-
-      setTimeout(() => {
-        modal.classList.remove("active");
-        applyUserSession(user, true);
-      }, 500);
-    });
-  }
-
-  // One-Click Instant Guest VIP Pass
-  if (guestBtn) {
-    guestBtn.addEventListener("click", () => {
-      const guestUser = {
-        name: "VIP Guest Client",
-        email: "guest@hanicreates.com",
-        phone: "0300 8661972",
-        role: "VIP Guest",
-        token: "GUEST-" + Math.random().toString(36).substring(2, 9)
-      };
-
-      sessionStorage.setItem("hani_auth_user", JSON.stringify(guestUser));
-      modal.classList.remove("active");
-      applyUserSession(guestUser, true);
-    });
-  }
-
-  // Logout Handlers
-  function doLogout() {
-    localStorage.removeItem("hani_auth_user");
-    sessionStorage.removeItem("hani_auth_user");
-    fetch("backend/auth.php?action=logout").catch(() => {});
-    clearUserSession();
-    showToast("Logged out successfully.", false);
-  }
-
-  if (navLogoutBtn) navLogoutBtn.addEventListener("click", doLogout);
-  if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", doLogout);
-}
-
-function clearUserSession() {
-  const navBadge = document.getElementById("navUserBadge");
-  const mobileBadge = document.getElementById("mobileUserBadge");
-  const openAuthBtn = document.getElementById("openAuthModalBtn");
-
-  if (navBadge) navBadge.classList.add("hidden");
-  if (mobileBadge) mobileBadge.classList.add("hidden");
-  if (openAuthBtn) openAuthBtn.classList.remove("hidden");
-}
-
-function applyUserSession(user, showNotice = false) {
-  const navBadge = document.getElementById("navUserBadge");
-  const navUserName = document.getElementById("navUserName");
-  const mobileBadge = document.getElementById("mobileUserBadge");
-  const mobileUserName = document.getElementById("mobileUserName");
-  const openAuthBtn = document.getElementById("openAuthModalBtn");
-
-  if (openAuthBtn) openAuthBtn.classList.add("hidden");
-
-  if (navBadge && navUserName) {
-    navUserName.textContent = user.name || "VIP Client";
-    navBadge.classList.remove("hidden");
-    navBadge.classList.add("flex");
-  }
-
-  if (mobileBadge && mobileUserName) {
-    mobileUserName.textContent = user.name || "VIP Client";
-    mobileBadge.classList.remove("hidden");
-    mobileBadge.classList.add("flex");
-  }
-
-  // Pre-fill Order Form for VIP user
-  const clientNameInput = document.getElementById("clientName");
-  const clientPhoneInput = document.getElementById("clientPhone");
-  const clientEmailInput = document.getElementById("clientEmail");
-
-  if (clientNameInput && !clientNameInput.value) clientNameInput.value = user.name || "";
-  if (clientPhoneInput && !clientPhoneInput.value) clientPhoneInput.value = user.phone || "";
-  if (clientEmailInput && !clientEmailInput.value) clientEmailInput.value = user.email || "";
-
-  if (showNotice) {
-    const t = PORTFOLIO_CONFIG.translations[currentLang];
-    showToast(`✨ Welcome, ${user.name}! ${t.auth?.loginSuccess || "Logged in."}`, false);
-  }
-}
-
-function showAuthAlert(msg, isError = true) {
-  const alert = document.getElementById("authAlert");
-  if (!alert) return;
-
-  alert.textContent = msg;
-  alert.classList.remove("hidden");
-  if (isError) {
-    alert.className = "p-3 rounded-xl text-xs font-bold mb-4 flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 text-rose-300";
-  } else {
-    alert.className = "p-3 rounded-xl text-xs font-bold mb-4 flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-300";
-  }
-}
-
-function clearAuthAlert() {
-  const alert = document.getElementById("authAlert");
-  if (alert) alert.classList.add("hidden");
-}
-
-// =====================================================================
-// 2. LANGUAGE SWITCHER ENGINE
+// 1. LANGUAGE SWITCHER ENGINE
 // =====================================================================
 function initLanguageSwitcher() {
   document.querySelectorAll(".lang-switch-btn").forEach(btn => {
@@ -329,36 +80,6 @@ function applyLanguage(lang) {
   const currentLangFlag = document.getElementById("currentLangFlag");
   if (currentLangLabel) currentLangLabel.textContent = t.langName;
   if (currentLangFlag) currentLangFlag.textContent = t.flag;
-
-  // Scarcity Banner
-  updateText("scarcityText", t.auth?.scarcityBanner || "🔥 HIGH DEMAND: Only 2 client slots open this week • 24h Express Turnaround Guarantee!");
-
-  // Auth Gate Texts
-  if (t.auth) {
-    updateText("authGateTitle", t.auth.gateTitle);
-    updateText("authGateSubtitle", t.auth.gateSubtitle);
-    updateText("authTabLogin", t.auth.tabLogin);
-    updateText("authTabSignup", t.auth.tabSignup);
-    updateText("authLoginEmailLabel", t.auth.emailLabel);
-    updateText("authLoginPassLabel", t.auth.passLabel);
-    updateText("authLoginBtnText", t.auth.btnLogin);
-    updateText("authSignupNameLabel", t.auth.nameLabel);
-    updateText("authSignupPhoneLabel", t.auth.phoneLabel);
-    updateText("authSignupEmailLabel", t.auth.emailLabel);
-    updateText("authSignupPassLabel", t.auth.passLabel);
-    updateText("authSignupBtnText", t.auth.btnSignup);
-    updateText("authGuestText", t.auth.guestPass);
-    updateText("authRememberLabel", t.auth.rememberMe);
-
-    const lEmail = document.getElementById("authLoginEmail");
-    if (lEmail) lEmail.placeholder = t.auth.emailPlh;
-    const sName = document.getElementById("authSignupName");
-    if (sName) sName.placeholder = t.auth.namePlh;
-    const sPhone = document.getElementById("authSignupPhone");
-    if (sPhone) sPhone.placeholder = t.auth.phonePlh;
-    const sEmail = document.getElementById("authSignupEmail");
-    if (sEmail) sEmail.placeholder = t.auth.emailPlh;
-  }
 
   // Designer profile images
   document.querySelectorAll(".designer-profile-img").forEach(img => {
@@ -599,12 +320,7 @@ function renderGallery(catId, lang) {
     return `
       <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer flex flex-col bg-[#14131A] border border-white/[0.08] hover:border-rose-500/40 transition-all hover:shadow-[0_10px_30px_rgba(225,29,72,0.18)]" onclick="openLightbox(${p.id})">
         <div class="relative w-full ${aspectClass} bg-[#0A0A0E] flex items-center justify-center p-2 sm:p-2.5 overflow-hidden border-b border-white/[0.06]">
-          <img 
-            src="${p.image}" 
-            alt="${title}" 
-            loading="lazy" 
-            class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
-          >
+          <img src="${p.image}" alt="${title}" loading="lazy" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80';">
           <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
             <div class="px-4 py-2 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg backdrop-blur-sm border border-rose-400/40">
               <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
@@ -696,11 +412,7 @@ window.openLightbox = function(id) {
   content.innerHTML = `
     <div class="relative bg-[#131219] text-white flex flex-col max-h-[92vh] border border-white/[0.12] rounded-3xl overflow-hidden shadow-2xl">
       <div class="relative w-full bg-[#08080C] flex items-center justify-center p-3 sm:p-5 overflow-hidden min-h-[260px] max-h-[58vh] border-b border-white/[0.08]">
-        <img 
-          src="${item.image}" 
-          alt="${title}" 
-          class="max-h-[52vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)]"
-        >
+        <img src="${item.image}" alt="${title}" class="max-h-[52vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)]" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80';">
         
         <button 
           onclick="document.getElementById('lightboxDialog').close()" 
