@@ -186,8 +186,8 @@ function renderStats(stats) {
   if (!container || !stats) return;
 
   container.innerHTML = stats.map((s, idx) => `
-    <div class="glass-card p-4 sm:p-5 rounded-2xl text-center group flex flex-col items-center justify-center border border-white/[0.08] hover:border-rose-500/40 transition-all bg-[#131219]">
-      <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 group-hover:bg-rose-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(225,29,72,0.15)]">
+    <div class="glass-card p-4 sm:p-5 rounded-2xl text-center group flex flex-col items-center justify-center border border-white/[0.08] hover:border-white/20 transition-all bg-[#131318] shadow-sm hover:shadow-md">
+      <div class="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 sm:mb-3 rounded-xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-rose-400 group-hover:bg-rose-600 group-hover:text-white transition-all shadow-sm">
         <i data-lucide="${s.icon}" class="w-5 h-5 sm:w-6 sm:h-6"></i>
       </div>
       <div class="stat-counter text-2xl sm:text-3xl font-black text-white tracking-tight mb-0.5 leading-tight" data-target="${s.value}">
@@ -363,39 +363,39 @@ function renderGallery(catId, lang) {
     const catName = typeof p.categoryName === "object" ? (p.categoryName[lang] || p.categoryName.en) : (p.category || "Design");
 
     return `
-      <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer flex flex-col bg-[#14131A] border border-white/[0.08] hover:border-rose-500/40 transition-all hover:shadow-[0_10px_30px_rgba(225,29,72,0.18)]" onclick="openLightbox(${p.id})">
-        <div class="relative w-full ${aspectClass} bg-[#0A0A0E] flex items-center justify-center p-2 sm:p-2.5 overflow-hidden border-b border-white/[0.06]">
+      <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer flex flex-col bg-[#131318] border border-white/[0.08] hover:border-white/20 transition-all hover:shadow-xl" onclick="openLightbox(${p.id})">
+        <div class="relative w-full ${aspectClass} bg-[#0c0c10] flex items-center justify-center p-2 sm:p-2.5 overflow-hidden border-b border-white/[0.06]">
           <img src="${p.image}" alt="${title}" loading="lazy" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
-          <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-            <div class="px-4 py-2 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg backdrop-blur-sm border border-rose-400/40">
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+            <div class="px-3.5 py-1.5 rounded-full bg-white/10 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md backdrop-blur-md border border-white/20">
               <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
               <span>${inspectBtnText}</span>
             </div>
           </div>
         </div>
 
-        <div class="p-4 sm:p-5 bg-[#14131A] flex flex-col flex-1">
+        <div class="p-4 sm:p-5 bg-[#131318] flex flex-col flex-1">
           <div class="flex items-center justify-between gap-2 mb-2.5">
-            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
-              <i data-lucide="folder" class="w-3 h-3 text-rose-400"></i> ${catName}
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/[0.06] text-slate-300 border border-white/[0.08]">
+              <i data-lucide="folder" class="w-3 h-3 text-slate-400"></i> ${catName}
             </span>
             ${p.metric ? `
-              <span class="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+              <span class="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
                 ${p.metric}
               </span>
             ` : ''}
           </div>
 
-          <h3 class="text-sm sm:text-base font-black text-white group-hover:text-rose-400 transition-colors line-clamp-2 mb-1.5 leading-snug">
+          <h3 class="text-sm sm:text-base font-bold text-white group-hover:text-rose-400 transition-colors line-clamp-2 mb-1.5 leading-snug">
             ${title}
           </h3>
 
-          <div class="text-xs text-slate-400 font-semibold flex items-center gap-1.5 mb-4">
+          <div class="text-xs text-slate-400 font-medium flex items-center gap-1.5 mb-4">
             <i data-lucide="user" class="w-3.5 h-3.5 text-slate-500"></i>
             <span>${p.client || 'Client Project'}</span>
           </div>
 
-          <div class="mt-auto pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-bold text-rose-400">
+          <div class="mt-auto pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-semibold text-slate-400 group-hover:text-rose-400 transition-colors">
             <span class="flex items-center gap-1">
               <i data-lucide="eye" class="w-3.5 h-3.5"></i> ${inspectBtnText}
             </span>
@@ -501,7 +501,7 @@ window.openLightbox = function(id) {
           <a 
             href="https://wa.me/${d.whatsappNumber}?text=${encodeURIComponent(`Assalam u Alaikum Hani Creates! I saw this design: "${title}". I want to place a custom order.`)}"
             target="_blank"
-            class="btn-primary w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shrink-0 shadow-[0_4px_20px_rgba(225,29,72,0.35)]"
+            class="btn-primary w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shrink-0 shadow-md"
           >
             <i data-lucide="message-circle" class="w-4 h-4"></i> ${btnText}
           </a>
@@ -947,62 +947,11 @@ function showToast(msg, isError = false) {
 }
 
 // =====================================================================
-// 9. AMBIENT COSMIC PARTICLES CANVAS (60FPS ULTRA SMOOTH)
+// 9. AMBIENT COSMIC PARTICLES CANVAS (CLEAN STUDIO MATTE THEME)
 // =====================================================================
 function initAmbientCanvas() {
-  const canvas = document.getElementById("ambientCanvas");
-  if (!canvas) return;
-
-  const ctx = canvas.getContext("2d");
-  let width = (canvas.width = window.innerWidth);
-  let height = (canvas.height = window.innerHeight);
-
-  window.addEventListener("resize", () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  });
-
-  const particleCount = Math.min(Math.floor(window.innerWidth / 20), 45);
-  const particles = [];
-
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      radius: Math.random() * 1.8 + 0.5,
-      color: Math.random() > 0.3 ? "rgba(225, 29, 72, " : "rgba(245, 158, 11, ",
-      alpha: Math.random() * 0.5 + 0.2
-    });
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0) p.x = width;
-      if (p.x > width) p.x = 0;
-      if (p.y < 0) p.y = height;
-      if (p.y > height) p.y = 0;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = p.color + p.alpha + ")";
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = p.color + "0.6)";
-      ctx.fill();
-      ctx.shadowBlur = 0;
-    }
-
-    requestAnimationFrame(animate);
-  }
-
-  animate();
+  // Disabled for calm, eye-comfort matte dark studio aesthetic
+  return;
 }
 
 // =====================================================================

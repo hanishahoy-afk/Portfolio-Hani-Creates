@@ -44,22 +44,13 @@
 </head>
 <body class="bg-[#09090C] text-slate-100 min-h-screen relative selection:bg-rose-600 selection:text-white">
 
-  <!-- Ambient Cosmic Particles 60FPS Canvas -->
-  <canvas id="ambientCanvas"></canvas>
-
-  <!-- Atmospheric Ambient Studio Glows -->
-  <div class="hero-glow"></div>
-  <div class="hero-glow-alt"></div>
-  <div class="hero-glow-bottom"></div>
-
-
   <!-- ================= NAVBAR ================= -->
-  <header class="sticky top-0 z-40 bg-[#09090C]/90 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+  <header class="sticky top-0 z-40 bg-[#0A0A0E]/90 backdrop-blur-xl border-b border-white/[0.08] shadow-md">
     <div class="site-container h-20 flex items-center justify-between gap-4">
       
       <!-- Brand Logo & Profile Avatar -->
       <a href="#" class="flex items-center gap-3 group shrink-0">
-        <div class="w-11 h-11 rounded-xl overflow-hidden border-2 border-rose-500/60 shadow-[0_0_15px_rgba(225,29,72,0.35)] group-hover:scale-105 transition-all shrink-0">
+        <div class="w-11 h-11 rounded-xl overflow-hidden border border-white/20 shadow-md group-hover:scale-105 transition-all shrink-0">
           <img src="profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover">
         </div>
         <div>
@@ -135,7 +126,7 @@
   <div id="mobileMenu" class="fixed inset-0 z-50 bg-[#0C0B12]/98 backdrop-blur-2xl hidden flex-col justify-between p-6 text-white shadow-2xl">
     <div class="flex items-center justify-between pb-6 border-b border-white/[0.08]">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl overflow-hidden border-2 border-rose-500/60 shadow-lg">
+        <div class="w-10 h-10 rounded-xl overflow-hidden border border-white/20 shadow-md">
           <img src="profile.jpg" alt="Hani Creates" class="designer-profile-img w-full h-full object-cover">
         </div>
         <div>
@@ -180,7 +171,7 @@
 
     <!-- Action Button -->
     <div>
-      <a id="mNavWhatsAppBtn" href="#" target="_blank" class="mobile-nav-link btn-primary w-full py-4 rounded-xl text-center font-bold flex items-center justify-center gap-2 mb-3 shadow-[0_4px_20px_rgba(225,29,72,0.4)]">
+      <a id="mNavWhatsAppBtn" href="#" target="_blank" class="mobile-nav-link btn-primary w-full py-4 rounded-xl text-center font-bold flex items-center justify-center gap-2 mb-3 shadow-md">
         <i data-lucide="message-circle" class="w-5 h-5"></i> <span id="mNavWhatsAppText">WhatsApp Me</span>
       </a>
       <div class="text-center text-xs text-slate-400 font-medium">⚡ 24-Hour Express Turnaround • 100% Satisfaction</div>
@@ -217,7 +208,7 @@
 
             <!-- Centered & Aligned Action Buttons -->
             <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start rtl:lg:justify-start gap-3 sm:gap-4 mb-7">
-              <a href="#portfolio" class="btn-primary w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(225,29,72,0.35)]">
+              <a href="#portfolio" class="btn-primary w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-md">
                 <i data-lucide="grid" class="w-5 h-5"></i>
                 <span id="heroBtnPortfolioText">Explore My Work</span>
               </a>
@@ -601,7 +592,7 @@
                   <button 
                     type="submit" 
                     id="orderSubmitBtn"
-                    class="btn-primary flex-1 py-4 rounded-xl font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(225,29,72,0.35)]"
+                    class="btn-primary flex-1 py-4 rounded-xl font-bold text-sm tracking-wide flex items-center justify-center gap-2 shadow-md"
                   >
                     <i data-lucide="send" class="w-5 h-5"></i>
                     <span id="orderBtnWhatsAppText">Send Order to WhatsApp & Email</span>
