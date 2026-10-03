@@ -362,10 +362,12 @@ function renderGallery(catId, lang) {
     const title = typeof p.title === "object" ? (p.title[lang] || p.title.en) : p.title;
     const catName = typeof p.categoryName === "object" ? (p.categoryName[lang] || p.categoryName.en) : (p.category || "Design");
 
+    const safeImg = p.image.startsWith("data:") ? p.image : encodeURI(p.image);
+
     return `
       <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer flex flex-col bg-[#131318] border border-white/[0.08] hover:border-white/20 transition-all hover:shadow-xl" onclick="openLightbox(${p.id})">
         <div class="relative w-full ${aspectClass} bg-[#0c0c10] flex items-center justify-center p-2 sm:p-2.5 overflow-hidden border-b border-white/[0.06]">
-          <img src="${p.image}" alt="${title}" loading="lazy" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
+          <img src="${safeImg}" alt="${title}" loading="lazy" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]">
           <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
             <div class="px-3.5 py-1.5 rounded-full bg-white/10 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md backdrop-blur-md border border-white/20">
               <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
@@ -453,11 +455,12 @@ window.openLightbox = function(id) {
   const subText = subTexts[lang] || subTexts.en;
   const btnText = btnTexts[lang] || btnTexts.en;
 
+  const safeImg = item.image.startsWith("data:") ? item.image : encodeURI(item.image);
   const content = document.getElementById("dialogContent");
   content.innerHTML = `
     <div class="relative bg-[#131219] text-white flex flex-col max-h-[92vh] border border-white/[0.12] rounded-3xl overflow-hidden shadow-2xl">
       <div class="relative w-full bg-[#08080C] flex items-center justify-center p-3 sm:p-5 overflow-hidden min-h-[260px] max-h-[58vh] border-b border-white/[0.08]">
-        <img src="${item.image}" alt="${title}" class="max-h-[52vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
+        <img src="${safeImg}" alt="${title}" class="max-h-[52vh] max-w-full w-auto h-auto object-contain rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
         
         <button 
           onclick="document.getElementById('lightboxDialog').close()" 
